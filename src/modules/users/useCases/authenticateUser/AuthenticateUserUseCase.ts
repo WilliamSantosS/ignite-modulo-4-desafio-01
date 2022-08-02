@@ -21,6 +21,7 @@ export class AuthenticateUserUseCase {
   ) {}
 
   async execute({ email, password }: IRequest): Promise<IAuthenticateUserResponseDTO> {
+    const auth = authConfig;
     const user = await this.usersRepository.findByEmail(email);
 
     if(!user) {
@@ -33,7 +34,7 @@ export class AuthenticateUserUseCase {
       throw new IncorrectEmailOrPasswordError();
     }
 
-    const { secret, expiresIn } = authConfig.jwt;
+    const { secret, expiresIn } = auth.jwt;
 
     const token = sign({ user }, secret, {
       subject: user.id,
